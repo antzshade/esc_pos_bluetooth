@@ -89,9 +89,11 @@ class PrinterBluetoothManager {
     const int timeout = 5;
     if (_selectedPrinter == null) {
       return Future<PosPrintResult>.value(PosPrintResult.printerNotSelected);
-    } else if (_isScanning.value!) {
-      return Future<PosPrintResult>.value(PosPrintResult.scanInProgress);
-    } else if (_isPrinting) {
+    }
+    // else if (_isScanning.value!) {
+    //   return Future<PosPrintResult>.value(PosPrintResult.scanInProgress);
+    // }
+    else if (_isPrinting) {
       return Future<PosPrintResult>.value(PosPrintResult.printInProgress);
     }
 
