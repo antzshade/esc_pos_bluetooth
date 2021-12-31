@@ -35,8 +35,7 @@ class PrinterBluetoothManager {
   final BehaviorSubject<bool> _isScanning = BehaviorSubject.seeded(false);
   Stream<bool> get isScanningStream => _isScanning.stream;
 
-  final BehaviorSubject<List<PrinterBluetooth>> _scanResults =
-      BehaviorSubject.seeded([]);
+  final BehaviorSubject<List<PrinterBluetooth>> _scanResults = BehaviorSubject.seeded([]);
   Stream<List<PrinterBluetooth>> get scanResults => _scanResults.stream;
 
   Future _runDelayed(int seconds) {
@@ -52,8 +51,7 @@ class PrinterBluetoothManager {
       _scanResults.add(devices.map((d) => PrinterBluetooth(d)).toList());
     });
 
-    _isScanningSubscription =
-        _bluetoothManager.isScanning.listen((isScanningCurrent) async {
+    _isScanningSubscription = _bluetoothManager.isScanning.listen((isScanningCurrent) async {
       // If isScanning value changed (scan just stopped)
       if (_isScanning.value! && !isScanningCurrent) {
         _scanResultsSubscription!.cancel();
@@ -69,6 +67,16 @@ class PrinterBluetoothManager {
 
   void selectPrinter(PrinterBluetooth printer) {
     _selectedPrinter = printer;
+  }
+
+  void selectPrinterManual(String name, String address, {int type: 3, bool connected: true}) {
+    BluetoothDevice bDevice = BluetoothDevice.fromJson({
+      "name": name,
+      "address": address,
+      "type": type,
+      "connected": connected,
+    });
+    _selectedPrinter = PrinterBluetooth(bDevice);
   }
 
   Future<PosPrintResult> writeBytes(
