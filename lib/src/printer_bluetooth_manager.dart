@@ -69,7 +69,7 @@ class PrinterBluetoothManager {
     _selectedPrinter = printer;
   }
 
-  void selectPrinterManual(String name, String address, {int type: 3, bool connected: true}) {
+  PrinterBluetooth? selectPrinterManual(String name, String address, {int type: 3, bool connected: true}) {
     BluetoothDevice bDevice = BluetoothDevice.fromJson({
       "name": name,
       "address": address,
@@ -77,6 +77,7 @@ class PrinterBluetoothManager {
       "connected": connected,
     });
     _selectedPrinter = PrinterBluetooth(bDevice);
+    return _selectedPrinter;
   }
 
   Future<PosPrintResult> writeBytes(
@@ -89,11 +90,9 @@ class PrinterBluetoothManager {
     const int timeout = 5;
     if (_selectedPrinter == null) {
       return Future<PosPrintResult>.value(PosPrintResult.printerNotSelected);
-    }
-    // else if (_isScanning.value!) {
-    //   return Future<PosPrintResult>.value(PosPrintResult.scanInProgress);
-    // }
-    else if (_isPrinting) {
+    } else if (_isScanning.value!) {
+      return Future<PosPrintResult>.value(PosPrintResult.scanInProgress);
+    } else if (_isPrinting) {
       return Future<PosPrintResult>.value(PosPrintResult.printInProgress);
     }
 
